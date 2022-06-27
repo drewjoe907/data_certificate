@@ -1,5 +1,5 @@
-# This Python Script will read some data from an xcel sheet into a panda and line graph it.
-# The code below runs on Jupyter-Lab using Python if the Python has Javascript built in.
+# This Python Script will read some data from an xcel sheet into a panda and graph it in a number of different graphs.
+
 
 # Import some useful libraries
 # import piplite

@@ -4,7 +4,11 @@ import numpy as np
 from PIL import Image
 import matplotlib as mpl
 import matplotlib.pyplot as plt
-import matplotlib.patches as mpatches # needed for waffle Charts
+
+import seaborn as sns
+
+print('Seaborn installed and imported!')
+
 
 mpl.style.use('ggplot') # optional: for ggplot-like style
 
@@ -37,5 +41,55 @@ df_can.set_index('Country', inplace=True)
 df_can.columns = list(map(str, df_can.columns))
 inplace = True # paramemter saves the changes to the original df_can dataframe
 
+"""
+    **Question**: Use seaborn to create a scatter plot with a regression line to
+    visualize the total immigration from Denmark, Sweden, and Norway to Canada
+    from 1980 to 2013.
+"""
+# let's create a new dataframe for these three countries
+df_dsn = df_can.loc[['Denmark', 'Norway', 'Sweden'], years].transpose()
 
-ax = sns.regplot(x='Year', y='Total', data=df_tot)
+ # create df_total by summing across three countries for each year
+df_total = pd.DataFrame(df_dsn.sum(axis=1, numeric_only=True))
+
+# reset index in place
+df_total.reset_index(inplace=True)
+
+# rename columns
+df_total.columns = ['year', 'total']
+
+# change column year from string to int to create scatter plot
+df_total['year'] = df_total['year'].astype(int)
+
+# define figure size
+plt.figure(figsize=(15, 10))
+
+# define background style and font size
+sns.set(font_scale=1.5)
+sns.set_style('whitegrid')
+
+# generate plot and add title and axes labels
+ax = sns.regplot(x='year', y='total', data=df_total, color='green', marker='+', scatter_kws={'s': 200})
+ax.set(xlabel='Year', ylabel='Total Immigration')
+ax.set_title('Total Immigrationn from Denmark, Sweden, and Norway to Canada from 1980 - 2013')
+plt.show()
+
+"""
+# we can use the sum() method to get the total population per year
+df_tot = pd.DataFrame(df_can[years].sum(axis=0))
+
+# change the years to type float (useful for regression later on)
+df_tot.index = map(float, df_tot.index)
+
+# reset the index to put in back in as a column in the df_tot dataframe
+df_tot.reset_index(inplace=True)
+
+# rename columns
+df_tot.columns = ['year', 'total']
+
+# view the final dataframe
+df_tot.head()
+"""
+
+
+# ax = sns.regplot(x='Year', y='Total', data=df_tot)
